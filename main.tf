@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 ## Create VPC
-resource "aws_vpc" "prod-vpc" {
+resource "aws_vpc" "myapp-vpc" {
   cidr_block = var.cidr_blocks[0]
   tags = {
     Name = "production"
@@ -12,7 +12,7 @@ resource "aws_vpc" "prod-vpc" {
 
 ## Create a subnet
 resource "aws_subnet" "subnet-1" {
-  vpc_id     = aws_vpc.prod-vpc.id
+  vpc_id     = aws_vpc.myapp-vpc.id
   cidr_block = var.cidr_blocks[1]
   availability_zone = "us-east-2a"
 
@@ -21,15 +21,15 @@ resource "aws_subnet" "subnet-1" {
   }
 }
 
-resource "aws_subnet" "subnet-2" {
-  vpc_id            = data.aws_vpc.existing_vpc.id
-  availability_zone = "us-east-2a"
-  cidr_block        = var.cidr_blocks[2]
+# resource "aws_subnet" "subnet-2" {
+#   vpc_id            = data.aws_vpc.existing_vpc.id
+#   availability_zone = "us-east-2a"
+#   cidr_block        = var.cidr_blocks[2]
 
-  tags = {
-    Name = "prod-subnet-2"
-  }
-}
+#   tags = { 
+#     Name = "prod-subnet-2"
+#   }
+# }
 
 data "aws_vpc" "existing_vpc" {
   default =  true
@@ -68,3 +68,10 @@ output "vpc-subnet" {
 #   description = "subnet cidr block"
 # }
 
+# variable "cidr_blocks" {
+#   description = "cidr blocks and name tags for vpc and subnets"
+#   type = list(object({
+#       cidr_block = string
+#       name = string
+#   }))
+# }
